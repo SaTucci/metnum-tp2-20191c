@@ -7,13 +7,13 @@ using namespace std;
 
 PCA::PCA(unsigned int n_components)
 {
-	n = n_components;     
+	alfa = n_components;     
 }
 
-void PCA::fit(Matrix Y,unsigned int alfa, unsigned int num_iter, double epsilon)
+void PCA::fit(Matrix Y, unsigned int num_iter, double epsilon)
 {
 	M = Y;
-		//Calculo mu, el vector de promedios de las variables de cada medicion
+	//Calculo mu, el vector de promedios de las variables de cada medicion
 	//(O sea el promedio para cada fila de la matriz)
 	Matrix mu(M.cols(),1);
 	for(int i = 0; i < M.cols(); i++){
@@ -24,25 +24,17 @@ void PCA::fit(Matrix Y,unsigned int alfa, unsigned int num_iter, double epsilon)
 	for(int i = 0; i < M.cols(); i++){
 		X.row(i) = (M.row(i) - mu.transpose()).transpose() / sqrt(M.rows() - 1);
 	} 
-	//cout << X << endl; 
+	
 	Matrix Cov = X.transpose() * X;
 	cout << Cov << endl;
-
-	auto eig = get_first_eigenvalues(M, alfa, num_iter, epsilon);
-	//cout << eig.second << endl;
-	Matrix TC(X.rows(),alfa);
-	for(int i = 0; i < M.cols(); i++){
-		for(int j = 0; j < TC.cols(); j++){
-			//Supongo que hay que transponer los autovectores
-			TC(i,j) = (eig.second.col(j).transpose().dot(X.row(i)));
-		} 
-	}
-	//cout << TC << endl;
-	M = TC;
+	auto eig = get_first_eigenvalues(Cov, alfa, num_iter, epsilon);
+	V = eig.second;
 }
 
 
 MatrixXd PCA::transform(Matrix Y)
 {
-	cout << Y * M << endl;
+	//Tal vez tambien habria que cambiar de base a M, no estoy seguro
+	Matrix res = Y* V; 
+	return res;
 }
