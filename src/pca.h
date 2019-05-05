@@ -7,6 +7,8 @@ public:
 
     void fit(Matrix X);
 
-    Eigen::MatrixXd transform(SparseMatrix X);
+    Eigen::MatrixXd transform(/*SparseMatrix Y*/unsigned int alfa, unsigned int num_iter, double epsilon);
 private:
+	unsigned int n;
+	Matrix M;
 };
