@@ -22,7 +22,7 @@ void PCA::fit(Matrix Y,unsigned int alfa, unsigned int num_iter, double epsilon)
 	cout << mu << endl; 
 	Matrix X(M.rows(),M.cols());
 	for(int i = 0; i < M.cols(); i++){
-		X.row(i) = (M.row(i).array() - mu(i,0)).transpose() / sqrt(M.rows() - 1);
+		X.row(i) = (M.row(i) - mu.transpose()).transpose() / sqrt(M.rows() - 1);
 	} 
 	//cout << X << endl; 
 	Matrix Cov = X.transpose() * X;
