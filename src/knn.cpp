@@ -36,31 +36,29 @@ double KNNClassifier::_predict_row(Vector row){
     }
 
     //Hago un sort de mayor a menor guardando los indices 
-    Vector indices = sort_indexes(sumas);
-
-    //Me quedo con los primeros n_neighbors indices 
-    indices.conservativeResize(n_neighbors);
-    cout << y.rows() << endl;
-    for(int i = 0; i < n_neighbors; i++){
-        //Esto esta mal en vez de i tiene que ir indices(i) pero no compila
-        votes(i) = y(i,0);
-    }
-    cout << votes << endl;
-    Vector votes_count = bin_count(votes);
+    vector<int> indices = sort_indexes(sumas);
     
-    return votes(max_elem(votes_count));
-
+    //Me quedo con los primeros n_neighbors indices 
+    indices.resize(n_neighbors); // Uso un vector comun porque con Vector pincha
+        
+    for(int i = 0; i < n_neighbors; i++){
+        votes(i) = y(0,indices[i]);
+    }
+    
+    Vector votes_count = bin_count(votes);
+        
+    return votes(max_elem_index(votes_count));
 }
 
 Vector KNNClassifier::predict(Matrix X)
 {
     // Creamos vector columna a devolver
     auto ret = Vector(X.rows());
-    _predict_row(X.row(0));
-    // for (unsigned k = 0; k < X.rows(); ++k)
-    // {
-    //     ret(k) = _predict_row(X.row(k));
-    // }
+        
+    for (unsigned k = 0; k < X.rows(); ++k)
+    {
+        ret(k) = _predict_row(X.row(k));
+    }
 
     return ret;
 }

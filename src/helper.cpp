@@ -4,15 +4,15 @@
 #include "eigen.h"
 
 
-Vector sort_indexes(const Vector &v) {
+vector<int> sort_indexes(const Vector &v) {
 
   // initialize original index locations
-  Vector idx(v.size());
+  vector<int> idx(v.size());
   iota(idx.begin(), idx.end(), 0);
 
   // sort indexes based on comparing values in v
   sort(idx.begin(), idx.end(),
-       [&v](size_t i1, size_t i2) {return v(i1) > v(i2);});
+       [&v](size_t i1, size_t i2) {return v(i1) < v(i2);});
 
   return idx;
 }
@@ -26,13 +26,15 @@ Vector bin_count(const Vector &v) {
   return bc;
 }
 
-int max_elem(const Vector &v){
+int max_elem_index(const Vector &v){
    double max = -1;
+   int index = -1;
    for(int i = 0; i < v.count(); i++){
      if(v(i) > max){
        max = v(i);
+       index = i;
      }
    }
 
-   return max;
+   return index;
 }
