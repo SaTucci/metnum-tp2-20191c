@@ -11,7 +11,7 @@ KNNClassifier::KNNClassifier(unsigned int n_neighbors)
     this->n_neighbors = n_neighbors;
 }
 
-void KNNClassifier::fit(Matrix X, Matrix y)
+void KNNClassifier::fit(SparseMatrix X, Matrix y)
 {
     this->X = X;
     this->y = y;
@@ -50,14 +50,15 @@ double KNNClassifier::_predict_row(Vector row){
     return votes(max_elem_index(votes_count));
 }
 
-Vector KNNClassifier::predict(Matrix X)
+Vector KNNClassifier::predict(SparseMatrix X)
 {
+    Matrix XDense = MatrixXd(X);
     // Creamos vector columna a devolver
-    auto ret = Vector(X.rows());
+    auto ret = Vector(XDense.rows());
         
-    for (unsigned k = 0; k < X.rows(); ++k)
+    for (unsigned k = 0; k < XDense.rows(); ++k)
     {
-        ret(k) = _predict_row(X.row(k));
+        ret(k) = _predict_row(XDense.row(k));
     }
 
     return ret;

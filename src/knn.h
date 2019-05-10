@@ -7,9 +7,9 @@ class KNNClassifier {
 public:
     KNNClassifier(unsigned int n_neighbors);
 
-    void fit(Matrix X, Matrix y);
+    void fit(SparseMatrix X, Matrix y);
 
-    Vector predict(Matrix X);
+    Vector predict(SparseMatrix X);
 private:
     //Funciones privadas
     double _predict_row(Vector row);
