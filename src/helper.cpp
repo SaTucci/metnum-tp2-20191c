@@ -4,14 +4,14 @@
 #include "eigen.h"
 
 
-vector<int> sort_indexes(const Vector &v) {
+std::vector<int> sort_indexes(const Vector &v) {
 
   // initialize original index locations
-  vector<int> idx(v.size());
-  iota(idx.begin(), idx.end(), 0);
+  std::vector<int> idx(v.size());
+  std::iota(idx.begin(), idx.end(), 0);
 
   // sort indexes based on comparing values in v
-  sort(idx.begin(), idx.end(),
+  std::sort(idx.begin(), idx.end(),
        [&v](size_t i1, size_t i2) {return v(i1) < v(i2);});
 
   return idx;
@@ -20,7 +20,7 @@ vector<int> sort_indexes(const Vector &v) {
 Vector bin_count(const Vector &v) {
   Vector bc(v.size());
   for(int i = 0; i < v.size(); i++){
-    bc(i) = count(v.begin(), v.end(), v(i));
+    bc(i) = std::count(v.begin(), v.end(), v(i));
   }
 
   return bc;
