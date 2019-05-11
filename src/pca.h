@@ -5,11 +5,11 @@ class PCA {
 public:
     PCA(unsigned int n_components);
 
-    void fit(Matrix Y, unsigned int num_iter, double epsilon);
+    void fit(SparseMatrix Y, unsigned int num_iter, double epsilon);
 
-    Eigen::MatrixXd transform(Matrix Y);
+    Eigen::MatrixXd transform(SparseMatrix Y, int alfa);
 private:
-	unsigned int alfa;
+	unsigned int max_alfa;
 	//Matriz de datos
 	Matrix M;
 	//Matriz de cambio de base

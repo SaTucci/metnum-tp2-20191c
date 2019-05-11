@@ -7,12 +7,13 @@ using namespace std;
 
 PCA::PCA(unsigned int n_components)
 {
-	alfa = n_components;     
+	max_alfa = n_components;     
 }
 
-void PCA::fit(Matrix Y, unsigned int num_iter, double epsilon)
+void PCA::fit(SparseMatrix Y, unsigned int num_iter, double epsilon)
 {
-	M = Y;
+	M = MatrixXd(Y);
+	//M = Y;
 	//Calculo mu, el vector de promedios de las variables de cada medicion
 	//(O sea el promedio para cada fila de la matriz)
 	Matrix mu(M.cols(),1);
@@ -27,14 +28,16 @@ void PCA::fit(Matrix Y, unsigned int num_iter, double epsilon)
 	
 	Matrix Cov = X.transpose() * X;
 	cout << Cov << endl;
-	auto eig = get_first_eigenvalues(Cov, alfa, num_iter, epsilon);
+	auto eig = get_first_eigenvalues(Cov, max_alfa, num_iter, epsilon);
 	V = eig.second;
 }
 
 
-MatrixXd PCA::transform(Matrix Y)
+MatrixXd PCA::transform(SparseMatrix Y, int alfa)
 {
 	//Tal vez tambien habria que cambiar de base a M, no estoy seguro
-	Matrix res = Y* V; 
+	Matrix denseY = MatrixXd(Y);
+	Matrix trimmedV = V(Eigen::all, Eigen::seq(0,alfa - 1)); 
+	Matrix res = denseY* trimmedV;
 	return res;
 }
