@@ -12,14 +12,12 @@
 int main(){
 
     
-    Matrix X = Matrix(5,4);
+    Matrix X = Matrix(3,4);
     Matrix y = Matrix(1,4);
     Matrix predict = Matrix(1,4);
-    X <<    1,2,3,4,
-            105,107,113,125,
-            14,225,6,9,
-            17,23,15,94,
-            1784,12,19,135;
+    X <<    2,429,608,192,
+            173,746,800,125,
+            14,225,6,9;
     y << 1, 8, 3, 7;
     predict << 2,3,4,5;
 
@@ -30,7 +28,7 @@ int main(){
     //KNNClassifier knn = KNNClassifier(2);
     //knn.fit(X,y);
     PCA pca(3);
-    pca.fit(XSparse,100000,1e-16);
+    pca.fit(XSparse,100000000,0.000000000000001);
     //cout << knn.predict(predict) << endl;
     
 
