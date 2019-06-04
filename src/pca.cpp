@@ -1,9 +1,14 @@
+#include <pybind11/pybind11.h>
+#include <pybind11/eigen.h>
 #include <iostream>
 #include "pca.h"
 #include "eigen.h"
 #include <cmath>
 #include <stdexcept>
 using namespace std;
+
+namespace py=pybind11;
+
 PCA::PCA(unsigned int n_components)
 {
 	max_alfa = n_components;  
@@ -11,25 +16,24 @@ PCA::PCA(unsigned int n_components)
 
 void PCA::fit(SparseMatrix Y, unsigned int num_iter, double epsilon)
 {
-	//py::print("EMPIEZO FIT");
 	M = MatrixXd(Y);
 	//M = Y;
 	//Calculo mu, el vector de promedios de las variables de cada medicion
 	//(O sea el promedio para cada fila de la matriz)
-	Matrix mu(1,M.cols());
-	for(int i = 0; i < M.rows(); i++){
+	Matrix mu = Matrix::Zero(1,M.cols());
+	for(int i = 0; i < M.rows(); i++){		
 		mu += M.row(i);
 	}
 	mu = mu/M.rows();
 	Matrix X(M.rows(),M.cols());
 	for(int i = 0; i < M.rows(); i++){
-        //el i itera por columna pero accede por fila! esto puede causar problemas
+
 		X.row(i) = (M.row(i) - mu) / sqrt(M.rows() - 1);
 	}
 	Matrix Cov = X.transpose() * X;
+	py::print(Cov.allFinite());
 	auto eig = get_first_eigenvalues(Cov, max_alfa, num_iter, epsilon);
 	V = eig.second;
-	cout << V << endl; 
 }
 
 
