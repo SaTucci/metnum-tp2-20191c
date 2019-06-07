@@ -24,9 +24,11 @@ if __name__ == "__main__":
 	#2
 	import pandas as pd
 
+	import numpy as np
+
 	#!cd ../data && tar -xvf *.tgz
 
-	#df = pd.read_csv("../data/imdb_small.csv", index_col=0)
+	df_train = pd.read_csv("../data/imdb_small.csv", index_col=0)
 	df = pd.read_csv(settings.dataset, index_col=0)
 
 	#print("Cantidad de documentos: {}".format(df.shape[0]))
@@ -36,8 +38,8 @@ if __name__ == "__main__":
 	#df.describe()
 
 	#4
-	text_train = df[df.type == 'train']["review"]
-	label_train = df[df.type == 'train']["label"]
+	text_train = df_train[df_train.type == 'train']["review"]
+	label_train = df_train[df_train.type == 'train']["label"]
 
 	text_test = df[df.type == 'test']["review"]
 	label_test = df[df.type == 'test']["label"]
@@ -56,8 +58,8 @@ if __name__ == "__main__":
 	    X_train, y_train = vectorizer.transform(text_train), (label_train == 'pos').values
 	    X_test, y_test = vectorizer.transform(text_test), (label_test == 'pos').values
 
-	    import sentiment
-
+	    #import sentiment
+	    print("hola")
 	    clf = sentiment.KNNClassifier(knn_neighbours_)
 	    pca = sentiment.PCA(max_alpha_)
 	    #fitteo con el x_train calculado arriba
@@ -77,7 +79,7 @@ if __name__ == "__main__":
 	        from sklearn.metrics import recall_score
 
 	        y_pred = clf.predict(pca_X_test)
-
+	        print(y_pred)
 	        acc = accuracy_score(y_test, y_pred)
 	        pre = precision_score(y_test, y_pred)
 	        rec = recall_score(y_test, y_pred)
@@ -86,57 +88,48 @@ if __name__ == "__main__":
 	        end = time.time()
 	        delta_time = end - start
 	        delta_time_str = str(round(delta_time, 2))
-
+	        f = open(settings.classif, "+a")
+	        f.write("\n")
+	        review_number = df.loc['id']
+	        for i in range(len(y_pred)):
+	        	if y_pred[i] == 0:
+	        		f.write("neg\n" + str(review_number[i]))
+	        	else:
+	        		f.write("pos\n" + str(review_number[i]))
 	    return acc
 		#return file to write
 
 
-
-
+	import time
+	from sklearn.feature_extraction.text import CountVectorizer
 	def run_knn_no_pca(max_df_=0.90, min_df_=0.01, max_features_=5000, knn_neighbours_=100, alpha_=30):
-	    vectorizer = CountVectorizer(max_df=max_df_, min_df=min_df_, max_features=max_features_)
-	    vectorizer.fit(text_train)
+		vectorizer = CountVectorizer(max_df=max_df_, min_df=min_df_, max_features=max_features_)
+		vectorizer.fit(text_train)
 
-	    X_train, y_train = vectorizer.transform(text_train), (label_train == 'pos').values
-	    X_test, y_test = vectorizer.transform(text_test), (label_test == 'pos').values
+		X_train, y_train = vectorizer.transform(text_train), (label_train == 'pos').values
+		X_test, y_test = vectorizer.transform(text_test), (label_test == 'pos').values
 
-	    import sentiment
+		import sentiment
+		clf = sentiment.KNNClassifier(knn_neighbours_)
 
-	    clf = sentiment.KNNClassifier(knn_neighbours_)
-	    #esta linea y el siguiente bloque son para correr KNN sin PCA
-	    #esta comentado para poder ejecutar todos los bloques sin ejecutar este
-	    #por equivocacion 
-	    #clf.fit(X_train, y_train)
 
-	    #Timing starts, same as previous cell:
-	    start = time.time()
 
-	    clf.fit(X_train, y_train)
-	    #clf.fit(pca_X_train, y_train)
-	    from sklearn.metrics import accuracy_score
-	    from sklearn.metrics import precision_score
-	    from sklearn.metrics import recall_score
+		clf.fit(X_train, y_train)
+		#clf.fit(pca_X_train, y_train)
+		from sklearn.metrics import accuracy_score
+		from sklearn.metrics import precision_score
+		from sklearn.metrics import recall_score
 
-	    y_pred = clf.predict(X_test)
-	    #y_pred = clf.predict(pca_X_test)
+		y_pred = clf.predict(X_test)
+		#y_pred = clf.predict(pca_X_test)
 
-	    acc = accuracy_score(y_test, y_pred)
-	    pre = precision_score(y_test, y_pred)
-	    rec = recall_score(y_test, y_pred)
-	    f1 = 2*(pre*rec)/(pre+rec)
-	    #Timing ends, again, like in previous cell.
-	    end = time.time()
-	    delta_time = end - start
-	    delta_time_str = str(round(delta_time, 2))
-	        
-	    return f1
-	    #return file to write
+		return acc
 
 max_df_ = 0.3725
 min_df_ =  0.01
-max_features_ = 5000
-knn_neighbours_ = 110
-alpha_ = 300
+max_features_ = 1000#5000
+knn_neighbours_ = 10#110
+alpha_ = 10#300
 
 data = settings.dataset
 res_file = settings.classif
