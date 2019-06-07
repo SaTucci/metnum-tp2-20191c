@@ -88,21 +88,6 @@ if __name__ == "__main__":
 	        end = time.time()
 	        delta_time = end - start
 	        delta_time_str = str(round(delta_time, 2))
-	        if True:
-	            comma = ", "
-	            f = open("../data/test_results/out.csv","a+")
-	            f.write("\n")
-	            f.write(str(round(acc,4)) + comma)
-	            f.write(str(round(pre,4)) + comma)
-	            f.write(str(round(rec,4)) + comma)
-	            f.write(delta_time_str + comma)
-	            f.write(str(round(max_df_,4)) + comma)
-	            f.write(str(round(min_df_,4)) + comma)
-	            f.write(str(round(max_features_,2)) + comma)
-	            f.write(str(round(knn_neighbours_,2)) + comma)
-	            f.write(str(round(alpha_,2))+ comma)
-	            f.write(str(round(f1,2)))
-	            f.close()
 
 	    return acc
 		#return file to write
@@ -145,21 +130,6 @@ if __name__ == "__main__":
 	    end = time.time()
 	    delta_time = end - start
 	    delta_time_str = str(round(delta_time, 2))
-	    if log:
-	        comma = ", "
-	        f = open("../data/test_results/out_no_pca.csv","a+")
-	        f.write("\n")
-	        f.write(str(round(acc,2)) + comma)
-	        f.write(str(round(pre,2)) + comma)
-	        f.write(str(round(rec,2)) + comma)
-	        f.write(delta_time_str + comma)
-	        f.write(str(round(max_df_,2)) + comma)
-	        f.write(str(round(min_df_,2)) + comma)
-	        f.write(str(round(max_features_,2)) + comma)
-	        f.write(str(round(knn_neighbours_,2)) + comma)
-	        f.write(str(round(alpha_,2))+ comma)
-	        f.write(str(round(f1,2)))
-	        f.close()
 	        
 	    return f1
 	    #return file to write
