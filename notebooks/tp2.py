@@ -90,12 +90,11 @@ if __name__ == "__main__":
 	        delta_time_str = str(round(delta_time, 2))
 	        f = open(settings.classif, "+a")
 	        f.write("\n")
-	        review_number = df.loc['id']
 	        for i in range(len(y_pred)):
 	        	if y_pred[i] == 0:
-	        		f.write("neg\n" + str(review_number[i]))
+	        		f.write("neg\n")
 	        	else:
-	        		f.write("pos\n" + str(review_number[i]))
+	        		f.write("pos\n")
 	    return acc
 		#return file to write
 
@@ -122,14 +121,20 @@ if __name__ == "__main__":
 
 		y_pred = clf.predict(X_test)
 		#y_pred = clf.predict(pca_X_test)
-
+       	f = open(settings.classif, "+a")
+       	f.write("\n")
+	        for i in range(len(y_pred)):
+	        	if y_pred[i] == 0:
+	        		f.write("neg\n")
+	        	else:
+	        		f.write("pos\n")
 		return acc
 
 max_df_ = 0.3725
 min_df_ =  0.01
-max_features_ = 1000#5000
-knn_neighbours_ = 10#110
-alpha_ = 10#300
+max_features_ = 5000
+knn_neighbours_ = 110
+alpha_ = 300
 
 data = settings.dataset
 res_file = settings.classif
