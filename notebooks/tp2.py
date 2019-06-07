@@ -18,9 +18,6 @@ if __name__ == "__main__":
 	print(settings.classif)
 
 
-
-
-
 	#1
 	import sentiment
 
@@ -29,13 +26,14 @@ if __name__ == "__main__":
 
 	#!cd ../data && tar -xvf *.tgz
 
-	df = pd.read_csv("../data/imdb_small.csv", index_col=0)
+	#df = pd.read_csv("../data/imdb_small.csv", index_col=0)
+	df = pd.read_csv(settings.dataset, index_col=0)
 
-	print("Cantidad de documentos: {}".format(df.shape[0]))
+	#print("Cantidad de documentos: {}".format(df.shape[0]))
 
 
 	#3
-	df.describe()
+	#df.describe()
 
 	#4
 	text_train = df[df.type == 'train']["review"]
@@ -44,14 +42,14 @@ if __name__ == "__main__":
 	text_test = df[df.type == 'test']["review"]
 	label_test = df[df.type == 'test']["label"]
 
-	print("Cantidad de instancias de entrenamiento = {}".format(len(text_train)))
-	print("Cantidad de instancias de test = {}".format(len(text_test)))
+	#print("Cantidad de instancias de entrenamiento = {}".format(len(text_train)))
+	#print("Cantidad de instancias de test = {}".format(len(text_test)))
 
 
 	#5
 	import time
 	from sklearn.feature_extraction.text import CountVectorizer
-	def test(max_alpha_, min_alpha_, alpha_step_, max_df_=0.90, min_df_=0.01, max_features_=5000, knn_neighbours_=100, log=False):
+	def run(max_alpha_, min_alpha_, alpha_step_, max_df_=0.90, min_df_=0.01, max_features_=5000, knn_neighbours_=100):
 	    vectorizer = CountVectorizer(max_df=max_df_, min_df=min_df_, max_features=max_features_)
 	    vectorizer.fit(text_train)
 
@@ -95,7 +93,7 @@ if __name__ == "__main__":
 
 
 
-	def test_knn_no_pca(max_df_=0.90, min_df_=0.01, max_features_=5000, knn_neighbours_=100, alpha_=30, log=False):
+	def run_knn_no_pca(max_df_=0.90, min_df_=0.01, max_features_=5000, knn_neighbours_=100, alpha_=30):
 	    vectorizer = CountVectorizer(max_df=max_df_, min_df=min_df_, max_features=max_features_)
 	    vectorizer.fit(text_train)
 
@@ -134,17 +132,18 @@ if __name__ == "__main__":
 	    return f1
 	    #return file to write
 
-
-
-#print(test(alpha_+1, alpha_, 1, max_df_, min_df_, max_features_, knn_neighbours_, log))
-
-print(test(30+1, 30, 1, 0.2, 0.1, 500, 10, True))
-
+max_df_ = 0.3725
+min_df_ =  0.01
+max_features_ = 5000
+knn_neighbours_ = 110
+alpha_ = 300
 
 data = settings.dataset
 res_file = settings.classif
 
-if settings.method:
-	print(test(alpha_+1, alpha_, 1, max_df_, min_df_, max_features_, knn_neighbours_, log))
+if settings.method == "1":
+	print("metodo con pca")
+	print(run(alpha_+1, alpha_, 1, max_df_, min_df_, max_features_, knn_neighbours_))
 else:
-	print(test_knn_no_pca(alpha_+1, alpha_, 1, max_df_, min_df_, max_features_, knn_neighbours_, log))
+	print("metodo sin pca")
+	print(run_knn_no_pca(max_df_, min_df_, max_features_, knn_neighbours_))
